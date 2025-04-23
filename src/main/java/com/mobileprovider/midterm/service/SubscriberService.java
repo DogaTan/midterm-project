@@ -16,12 +16,22 @@ public class SubscriberService {
         this.subscriberRepository = subscriberRepository;
     }
 
-    public Subscriber createSubscriber(Subscriber subscriber) {
-        if (subscriberRepository.existsBySubscriberNo(subscriber.getSubscriberNo())) {
+    public Subscriber createSubscriber(Subscriber request) {
+        if (subscriberRepository.existsBySubscriberNo(request.getSubscriberNo())) {
             throw new RuntimeException("Subscriber with this number already exists.");
         }
+    
+        // Yeni nesne oluştur, id veya dışardan gelen bozuk field’ları temizle
+        Subscriber subscriber = new Subscriber(
+            request.getSubscriberNo(),
+            request.getName(),
+            request.getEmail()
+        );
+    
         return subscriberRepository.save(subscriber);
     }
+    
+    
 
     public Optional<Subscriber> getSubscriberBySubscriberNo(String subscriberNo) {
         return subscriberRepository.findBySubscriberNo(subscriberNo);

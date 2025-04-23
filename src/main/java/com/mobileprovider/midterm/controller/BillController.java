@@ -50,7 +50,6 @@ public class BillController {
             @ApiResponse(responseCode = "401", description = "Unauthorized - JWT token missing or invalid"),
             @ApiResponse(responseCode = "404", description = "Subscriber not found")
     })
-    @PreAuthorize("isAuthenticated()")
     @GetMapping("/history")
     public ResponseEntity<List<Bill>> getBillHistory(
             @Parameter(description = "Subscriber Number", example = "1001") @RequestParam String subscriberNo) {
@@ -89,11 +88,15 @@ public class BillController {
         return ResponseEntity.ok(pagedBills);
     }
 
-    @Operation(summary = "Pay bill for a subscriber")
+    @Operation(summary = "Pay bill for a subscriber", description = """
+            Performs a payment for a specific bill. If the total amount is not covered by this payment,
+            the remaining amount will be saved. Once the total amount is covered, the bill is marked as paid.
+            """)
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Payment successful"),
-            @ApiResponse(responseCode = "404", description = "Bill not found"),
-            @ApiResponse(responseCode = "400", description = "Invalid payment amount")
+            @ApiResponse(responseCode = "200", description = "Payment processed successfully (Paid in full or partially)"),
+            @ApiResponse(responseCode = "400", description = "Invalid payment amount or input"),
+            @ApiResponse(responseCode = "404", description = "Bill not found for the given subscriber/month/year"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - JWT token missing or invalid")
     })
     @PostMapping("/pay")
     public ResponseEntity<Bill> payBill(
