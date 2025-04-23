@@ -157,6 +157,15 @@ spring.datasource.password=<your-db-password>
 
 ---
 
+## 📊 Entity-Relationship Diagram
+
+A visual representation of the database structure used in this project:
+
+![ER Diagram](./er-diagram.png)
+
+
+---
+
 ## 📎 Notes
 - Billing calculations include base and excess usage.
 - Payment endpoint accepts partial payments.
