@@ -173,9 +173,9 @@ A visual representation of the database structure used in this project:
 
 ---
 
-### 🎥 Sunum Videosu
+### 🎥 Presentation Video
 
-[📺 Videoyu buradan izleyin](https://drive.google.com/file/d/1PSb30VURlXkkBAaMPZRxN4KO1gCn6jML/view?usp=sharing)
+[📺 Watch the video here](https://drive.google.com/file/d/1PSb30VURlXkkBAaMPZRxN4KO1gCn6jML/view?usp=sharing)
 
 ---
 
