@@ -173,6 +173,12 @@ A visual representation of the database structure used in this project:
 
 ---
 
+### 🎥 Sunum Videosu
+
+[📺 Videoyu buradan izleyin](https://drive.google.com/file/d/1PSb30VURlXkkBAaMPZRxN4KO1gCn6jML/view?usp=sharing)
+
+---
+
 ## License
 
 This project was developed for educational purposes as part of the **SE4458 - Büyük Ölçekli Sistemler** course at **Yaşar University** (Midterm Project - 2025).
