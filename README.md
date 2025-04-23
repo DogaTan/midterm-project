@@ -126,8 +126,6 @@ POST /api/v1/bill/pay?subscriberNo=1001&month=4&year=2025&amount=75.00
 🔗 API Base URL: [`https://se4458-midterm-project.onrender.com`](https://se4458-midterm-project.onrender.com)  
 🔗 Swagger UI: [`https://se4458-midterm-project.onrender.com/swagger-ui.html`](https://se4458-midterm-project.onrender.com/swagger-ui.html)
 
-```
-
 Use the **"Authorize"** button to enter your JWT token.
 
 ---
