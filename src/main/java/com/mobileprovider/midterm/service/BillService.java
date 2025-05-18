@@ -20,7 +20,8 @@ public class BillService {
     private final UsageRepository usageRepository;
     private final BillRepository billRepository;
 
-    public BillService(SubscriberRepository subscriberRepository, UsageRepository usageRepository, BillRepository billRepository) {
+    public BillService(SubscriberRepository subscriberRepository, UsageRepository usageRepository,
+            BillRepository billRepository) {
         this.subscriberRepository = subscriberRepository;
         this.usageRepository = usageRepository;
         this.billRepository = billRepository;
@@ -30,12 +31,10 @@ public class BillService {
         Subscriber subscriber = subscriberRepository.findBySubscriberNo(subscriberNo)
                 .orElseThrow(() -> new RuntimeException("Subscriber not found"));
 
-        if (billRepository.findBySubscriberAndMonthAndYear(subscriber, month, year).isPresent()) {
-            throw new RuntimeException("Bill already calculated for this month");
-        }
-
-        List<Usage> phoneUsages = usageRepository.findBySubscriberAndUsageTypeAndMonthAndYear(subscriber, UsageType.PHONE, month, year);
-        List<Usage> internetUsages = usageRepository.findBySubscriberAndUsageTypeAndMonthAndYear(subscriber, UsageType.INTERNET, month, year);
+        List<Usage> phoneUsages = usageRepository.findBySubscriberAndUsageTypeAndMonthAndYear(subscriber,
+                UsageType.PHONE, month, year);
+        List<Usage> internetUsages = usageRepository.findBySubscriberAndUsageTypeAndMonthAndYear(subscriber,
+                UsageType.INTERNET, month, year);
 
         int totalMinutes = phoneUsages.stream().mapToInt(Usage::getAmount).sum();
         int totalMb = internetUsages.stream().mapToInt(Usage::getAmount).sum();
@@ -53,7 +52,15 @@ public class BillService {
 
         BigDecimal total = phoneCharge.add(internetCharge);
 
-        Bill bill = new Bill(subscriber, month, year, totalMinutes, totalMb, total);
+        // Daha önce varsa getir, yoksa yeni oluştur
+        Optional<Bill> existingBillOpt = billRepository.findBySubscriberAndMonthAndYear(subscriber, month, year);
+        Bill bill = existingBillOpt.orElseGet(() -> new Bill(subscriber, month, year));
+
+        // Güncelle
+        bill.setTotalMinutes(totalMinutes);
+        bill.setTotalMb(totalMb);
+        bill.setTotalAmount(total);
+
         return billRepository.save(bill);
     }
 
@@ -70,21 +77,21 @@ public class BillService {
         Subscriber subscriber = getSubscriberByNo(subscriberNo);
         Bill bill = billRepository.findBySubscriberAndMonthAndYear(subscriber, month, year)
                 .orElseThrow(() -> new RuntimeException("Bill not found"));
-    
+
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Amount must be greater than zero");
         }
-    
+
         BigDecimal updatedPaid = bill.getPaidAmount().add(amount);
         bill.setPaidAmount(updatedPaid);
-    
+
         if (updatedPaid.compareTo(bill.getTotalAmount()) >= 0) {
             bill.setIsPaid(true);
         }
-    
+
         return billRepository.save(bill);
     }
-    
+
 
     // ✅ Yeni eklenen: Abonenin tüm geçmiş faturalarını getir
     public List<Bill> getBillHistory(String subscriberNo) {

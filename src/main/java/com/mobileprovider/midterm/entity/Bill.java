@@ -2,7 +2,6 @@ package com.mobileprovider.midterm.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "bills")
@@ -16,52 +15,42 @@ public class Bill {
     @JoinColumn(name = "subscriber_id", nullable = false)
     private Subscriber subscriber;
 
-    @Column(nullable = false)
     private Integer month;
-
-    @Column(nullable = false)
     private Integer year;
 
-    @Column(nullable = false)
-    private Integer phoneMinutes;
+    private Integer totalMinutes;
+    private Integer totalMb;
 
-    @Column(nullable = false)
-    private Integer internetMb;
-
-    @Column(nullable = false)
     private BigDecimal totalAmount;
 
-    @Column(nullable = false)
-    private BigDecimal paidAmount;
+    private BigDecimal paidAmount = BigDecimal.ZERO;
+    private Boolean isPaid = false;
 
-    @Column(nullable = false)
-    private Boolean isPaid;
+    // Varsayılan Constructor
+    public Bill() {}
 
-    private LocalDateTime createdAt;
-
-    public Bill() {
-        this.createdAt = LocalDateTime.now();
-        this.phoneMinutes = 0;
-        this.internetMb = 0;
-        this.totalAmount = BigDecimal.ZERO;
-        this.paidAmount = BigDecimal.ZERO;
-        this.isPaid = false;
-    }
-
-    public Bill(Subscriber subscriber, Integer month, Integer year, Integer phoneMinutes, Integer internetMb, BigDecimal totalAmount) {
+    // Tüm Alanları Kapsayan Constructor
+    public Bill(Subscriber subscriber, Integer month, Integer year, Integer totalMinutes, Integer totalMb, BigDecimal totalAmount, BigDecimal paidAmount, Boolean isPaid) {
         this.subscriber = subscriber;
         this.month = month;
         this.year = year;
-        this.phoneMinutes = phoneMinutes;
-        this.internetMb = internetMb;
+        this.totalMinutes = totalMinutes;
+        this.totalMb = totalMb;
         this.totalAmount = totalAmount;
-        this.paidAmount = BigDecimal.ZERO;
-        this.isPaid = false;
-        this.createdAt = LocalDateTime.now();
+        this.paidAmount = paidAmount;
+        this.isPaid = isPaid;
     }
 
-    // Getters ve Setters ...
+    // Sadece subscriber, month, year alanlarını alan Constructor (Gereken ekleme)
+    public Bill(Subscriber subscriber, Integer month, Integer year) {
+        this.subscriber = subscriber;
+        this.month = month;
+        this.year = year;
+        this.paidAmount = BigDecimal.ZERO;
+        this.isPaid = false;
+    }
 
+    // Getters ve Setters
     public Long getId() {
         return id;
     }
@@ -90,20 +79,20 @@ public class Bill {
         this.year = year;
     }
 
-    public Integer getPhoneMinutes() {
-        return phoneMinutes;
+    public Integer getTotalMinutes() {
+        return totalMinutes;
     }
 
-    public void setPhoneMinutes(Integer phoneMinutes) {
-        this.phoneMinutes = phoneMinutes;
+    public void setTotalMinutes(Integer totalMinutes) {
+        this.totalMinutes = totalMinutes;
     }
 
-    public Integer getInternetMb() {
-        return internetMb;
+    public Integer getTotalMb() {
+        return totalMb;
     }
 
-    public void setInternetMb(Integer internetMb) {
-        this.internetMb = internetMb;
+    public void setTotalMb(Integer totalMb) {
+        this.totalMb = totalMb;
     }
 
     public BigDecimal getTotalAmount() {
@@ -128,9 +117,5 @@ public class Bill {
 
     public void setIsPaid(Boolean isPaid) {
         this.isPaid = isPaid;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
     }
 }

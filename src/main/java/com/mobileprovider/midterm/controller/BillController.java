@@ -40,8 +40,12 @@ public class BillController {
             @Parameter(description = "Subscriber Number", example = "1001") @RequestParam String subscriberNo,
             @Parameter(description = "Month", example = "4") @RequestParam Integer month,
             @Parameter(description = "Year", example = "2025") @RequestParam Integer year) {
-        Bill bill = billService.calculateBill(subscriberNo, month, year);
-        return ResponseEntity.ok(bill);
+        try {
+            Bill bill = billService.calculateBill(subscriberNo, month, year);
+            return ResponseEntity.ok(bill);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(409).body(null); // Fatura zaten var
+        }
     }
 
     @Operation(summary = "Get all bills for a subscriber", description = "Returns the list of all bills for the specified subscriber.")
